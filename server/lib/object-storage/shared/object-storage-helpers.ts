@@ -168,7 +168,8 @@ async function multiPartUpload (options: {
 
   const createMultipartCommand = new CreateMultipartUploadCommand({
     Bucket: bucketInfo.BUCKET_NAME,
-    Key: key
+    Key: key,
+    ACL: "public-read"
   })
   const createResponse = await s3Client.send(createMultipartCommand)
 
