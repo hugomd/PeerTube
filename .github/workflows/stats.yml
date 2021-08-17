@@ -3,7 +3,6 @@ name: "Stats"
 on:
   push:
     branches:
-    - develop
     - ci
     - next
   pull_request:

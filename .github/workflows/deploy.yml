@@ -1,0 +1,26 @@
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    name: Build, push, and deploy
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout master
+      uses: actions/checkout@v2
+
+    - name: Update submodules
+      run: git submodule update --init --recursive
+
+    - name: Build container image
+      run: docker build --tag ghcr.io/hugomd/peertube:$(echo $GITHUB_SHA | head -c7) --tag ghcr.io/hugomd/peertube:latest -f ./support/docker/production/Dockerfile.buster .
+
+    - name: Push image
+      env:
+        PAT: ${{ secrets.PAT }}
+      run: |
+        docker login ghcr.io -u hugomd -p $PAT
+        docker push ghcr.io/hugomd/peertube:$(echo $GITHUB_SHA | head -c7)
